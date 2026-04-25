@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="robots" content="noindex,nofollow">
+<title>COMBINIxHUNTER · Admin</title>
+<style>
+  :root {
+    --green:    #00703C;
+    --cream:    #F2EDE4;
+    --red:      #FF1E3C;
+    --cyan:     #0099BB;
+    --orange:   #FF6B00;
+    --dark:     #EDEAE2;
+    --mid:      #E2DDD5;
+    --border:   #D8D3CB;
+    --text:     #1A1A1A;
+    --muted:    #888;
+    --white:    #FFFFFF;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    background: var(--cream);
+    color: var(--text);
+    min-height: 100vh;
+    padding: 24px 16px;
+  }
+  .wrap { max-width: 720px; margin: 0 auto; }
+
+  header {
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+    margin-bottom: 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  h1 {
+    font-size: 18px;
+    letter-spacing: 4px;
+    color: var(--green);
+    font-weight: 900;
+  }
+  h1 .x { color: var(--red); }
+  .subtitle {
+    font-size: 10px;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .who {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+  }
+  .who b { color: var(--green); }
+
+  /* login */
+  .auth-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 24px;
+    max-width: 380px;
+    margin: 60px auto;
+  }
+  .auth-card h2 {
+    font-size: 14px;
+    letter-spacing: 4px;
+    color: var(--green);
+    margin-bottom: 16px;
+  }
+  label {
+    display: block;
+    font-size: 9px;
+    letter-spacing: 3px;
+    color: var(--muted);
+    margin-bottom: 6px;
+    text-transform: uppercase;
+  }
+  input[type="email"], input[type="password"], textarea {
+    width: 100%;
+    padding: 12px;
+    font-family: inherit;
+    font-size: 13px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 12px;
+    background: var(--cream);
+    color: var(--green);
+  }
+  textarea { min-height: 80px; resize: vertical; }
+  button.primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--red);
+    color: var(--cream);
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 900;
+    letter-spacing: 4px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button.primary:disabled { opacity: 0.4; cursor: not-allowed; }
+  .err {
+    color: var(--red);
+    font-size: 11px;
+    margin-top: 8px;
+    letter-spacing: 1px;
+  }
+
+  /* list */
+  .stats {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .stat-pill {
+    flex: 1;
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-pill .v {
+    font-size: 22px;
+    font-weight: 900;
+    color: var(--red);
+  }
+  .stat-pill .l {
+    font-size: 8px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 14px;
+  }
+  .card .photo {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    background: var(--dark);
+    display: block;
+  }
+  .card .photo-missing {
+    height: 200px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--muted);
+    letter-spacing: 4px;
+    font-size: 11px;
+    background: var(--dark);
+  }
+  .card .body { padding: 14px; }
+  .card .name {
+    font-size: 16px;
+    font-weight: 900;
+    color: var(--green);
+    margin-bottom: 4px;
+    word-break: break-word;
+  }
+  .card .submitter {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+  }
+  .card .gps {
+    background: var(--cream);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+  .card .gps .coords {
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--green);
+  }
+  .card .gps a {
+    font-size: 9px;
+    font-weight: 700;
+    color: var(--cyan);
+    letter-spacing: 2px;
+    text-decoration: none;
+  }
+  .card .meta {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+  }
+  .actions { display: flex; gap: 10px; }
+  .actions button {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 900;
+    letter-spacing: 3px;
+    font-size: 12px;
+    cursor: pointer;
+  }
+  .actions .reject {
+    background: transparent;
+    border: 2px solid var(--red);
+    color: var(--red);
+  }
+  .actions .approve {
+    background: var(--green);
+    color: var(--cream);
+  }
+  .actions button:disabled { opacity: 0.4; cursor: not-allowed; }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--muted);
+  }
+  .empty .icon {
+    font-size: 18px;
+    color: var(--green);
+    letter-spacing: 4px;
+    margin-bottom: 12px;
+    font-weight: 900;
+  }
+
+  /* modal */
+  .backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    z-index: 50;
+  }
+  .backdrop.open { display: flex; }
+  .modal {
+    background: var(--cream);
+    border-radius: 12px;
+    padding: 20px;
+    width: 100%;
+    max-width: 420px;
+    border: 1px solid var(--border);
+  }
+  .modal h3 {
+    font-size: 13px;
+    color: var(--red);
+    letter-spacing: 4px;
+    margin-bottom: 4px;
+  }
+  .modal p {
+    font-size: 11px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+  .modal-actions { display: flex; gap: 10px; }
+  .modal-actions button {
+    flex: 1;
+    padding: 11px;
+    border: none;
+    border-radius: 8px;
+    font-family: inherit;
+    font-weight: 700;
+    letter-spacing: 2px;
+    font-size: 11px;
+    cursor: pointer;
+  }
+  .modal-actions .cancel {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--muted);
+  }
+  .modal-actions .confirm {
+    background: var(--red);
+    color: var(--cream);
+    font-weight: 900;
+  }
+
+  .toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .toolbar .btn {
+    padding: 8px 14px;
+    background: transparent;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-family: inherit;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+  }
+  .toolbar .btn:hover { color: var(--green); border-color: var(--green); }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <!-- LOGIN VIEW -->
+  <div id="login" class="auth-card" style="display:none;">
+    <h2>ADMIN ACCESS</h2>
+    <form id="login-form">
+      <label>EMAIL</label>
+      <input type="email" id="email" required autocomplete="email">
+      <label>PASSWORD</label>
+      <input type="password" id="password" required autocomplete="current-password">
+      <button type="submit" class="primary" id="login-btn">SIGN IN</button>
+    </form>
+    <p class="err" id="login-err"></p>
+    <p style="font-size:9px; color:var(--muted); letter-spacing:1px; margin-top:14px; text-align:center;">
+      Use your COMBINIxHUNTER admin account.
+    </p>
+  </div>
+
+  <!-- DASHBOARD VIEW -->
+  <div id="dash" style="display:none;">
+    <header>
+      <div>
+        <h1>COMBINI<span class="x">x</span>HUNTER · ADMIN</h1>
+        <div class="subtitle">Submission moderation</div>
+      </div>
+      <div class="who">
+        <span id="me-handle"></span>
+        <button class="btn" id="logout" style="margin-left:10px;">LOGOUT</button>
+      </div>
+    </header>
+
+    <div class="stats">
+      <div class="stat-pill">
+        <div class="v" id="stat-pending">0</div>
+        <div class="l">PENDING</div>
+      </div>
+      <div class="stat-pill">
+        <div class="v" id="stat-approved" style="color:var(--green)">0</div>
+        <div class="l">APPROVED 24H</div>
+      </div>
+      <div class="stat-pill">
+        <div class="v" id="stat-rejected" style="color:var(--muted)">0</div>
+        <div class="l">REJECTED 24H</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <span class="subtitle">QUEUE (oldest first)</span>
+      <button class="btn" id="refresh">REFRESH</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <!-- LOADING -->
+  <div id="loading" style="display:flex; align-items:center; justify-content:center; min-height:200px; color:var(--muted); letter-spacing:3px; font-size:11px;">
+    LOADING…
+  </div>
+
+</div>
+
+<!-- REJECT MODAL -->
+<div class="backdrop" id="reject-backdrop">
+  <div class="modal">
+    <h3>REJECT SUBMISSION</h3>
+    <p id="reject-name"></p>
+    <label>REASON (visible to submitter)</label>
+    <textarea id="reject-reason" placeholder="e.g. Not a 7-Eleven / wrong GPS / duplicate"></textarea>
+    <div class="modal-actions">
+      <button class="cancel" id="reject-cancel">CANCEL</button>
+      <button class="confirm" id="reject-confirm">REJECT</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const SUPABASE_URL = 'https://urgnipdwatzdetmhrsil.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_t8QCiJazwjmHrXs36558Iw_3yh_C4M_';
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: { persistSession: true, autoRefreshToken: true },
+});
+
+const $ = (id) => document.getElementById(id);
+const setHidden = (id, hidden) => { $(id).style.display = hidden ? 'none' : ''; };
+
+let myProfile = null;
+let rejectTarget = null;
+
+async function bootstrap() {
+  const { data: { session } } = await supabase.auth.getSession();
+  setHidden('loading', true);
+  if (!session) {
+    showLogin();
+    return;
+  }
+  await afterLogin(session.user);
+}
+
+function showLogin() {
+  setHidden('login', false);
+  setHidden('dash', true);
+}
+
+async function afterLogin(user) {
+  // Check is_admin
+  const { data: prof, error } = await supabase
+    .from('profiles')
+    .select('id, username, is_admin')
+    .eq('id', user.id)
+    .single();
+  if (error || !prof || !prof.is_admin) {
+    await supabase.auth.signOut();
+    showLogin();
+    $('login-err').textContent = 'Access denied — admin only.';
+    return;
+  }
+  myProfile = prof;
+  $('me-handle').innerHTML = 'Signed in as <b>@' + prof.username + '</b>';
+  setHidden('login', true);
+  setHidden('dash', false);
+  await loadQueue();
+}
+
+async function loadQueue() {
+  const list = $('list');
+  list.innerHTML = '<div class="empty">LOADING QUEUE…</div>';
+  const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+    supabase
+      .from('stores')
+      .select('id, name, lat, lng, country_code, city, source, submission_photo_url, submitted_by, created_at, submitter:profiles!stores_submitted_by_fkey(username)')
+      .eq('status', 'pending')
+      .order('created_at', { ascending: true }),
+    supabase
+      .from('stores')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'approved')
+      .gte('moderated_at', new Date(Date.now() - 86400000).toISOString()),
+    supabase
+      .from('stores')
+      .select('id', { count: 'exact', head: true })
+      .eq('status', 'rejected')
+      .gte('moderated_at', new Date(Date.now() - 86400000).toISOString()),
+  ]);
+
+  const pending = pendingRes.data || [];
+  $('stat-pending').textContent = pending.length;
+  $('stat-approved').textContent = approvedRes.count || 0;
+  $('stat-rejected').textContent = rejectedRes.count || 0;
+
+  if (pending.length === 0) {
+    list.innerHTML =
+      '<div class="empty"><div class="icon">[ OK ]</div>' +
+      '<div>QUEUE EMPTY</div>' +
+      '<div style="font-size:10px; margin-top:6px;">All caught up.</div></div>';
+    return;
+  }
+
+  list.innerHTML = '';
+  for (const s of pending) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.id = 'card-' + s.id;
+    const photoBlock = s.submission_photo_url
+      ? '<img class="photo" src="' + s.submission_photo_url + '" alt="">'
+      : '<div class="photo-missing">NO PHOTO</div>';
+    const submitterName = s.submitter?.username
+      ? ('@' + s.submitter.username)
+      : '@unknown';
+    const ago = timeAgo(s.created_at);
+    const lat = (s.lat || 0).toFixed(6);
+    const lng = (s.lng || 0).toFixed(6);
+    const mapUrl = 'https://www.google.com/maps/search/?api=1&query=' + lat + ',' + lng;
+    const cityCountry = [s.city, s.country_code].filter(Boolean).join(' · ');
+    card.innerHTML =
+      photoBlock +
+      '<div class="body">' +
+        '<div class="name">' + escapeHtml(s.name) + '</div>' +
+        '<div class="submitter">by ' + submitterName + ' · ' + ago + '</div>' +
+        '<div class="gps">' +
+          '<span class="coords">' + lat + ', ' + lng + '</span>' +
+          '<a href="' + mapUrl + '" target="_blank" rel="noopener">OPEN IN MAPS ↗</a>' +
+        '</div>' +
+        (cityCountry ? '<div class="meta">' + escapeHtml(cityCountry) + '</div>' : '') +
+        '<div class="actions">' +
+          '<button class="reject" data-id="' + s.id + '" data-name="' + escapeAttr(s.name) + '">REJECT</button>' +
+          '<button class="approve" data-id="' + s.id + '">APPROVE</button>' +
+        '</div>' +
+      '</div>';
+    list.appendChild(card);
+  }
+}
+
+async function moderate(storeId, action, reason) {
+  const card = $('card-' + storeId);
+  if (card) {
+    card.style.opacity = '0.4';
+    card.querySelectorAll('button').forEach(b => b.disabled = true);
+  }
+  const { data, error } = await supabase.rpc('moderate_store', {
+    p_store_id: storeId,
+    p_action: action,
+    p_reason: reason || null,
+  });
+  if (error || !data?.success) {
+    alert('Moderation failed: ' + (error?.message || data?.error || 'unknown'));
+    if (card) {
+      card.style.opacity = '';
+      card.querySelectorAll('button').forEach(b => b.disabled = false);
+    }
+    return;
+  }
+  await loadQueue();
+}
+
+function timeAgo(iso) {
+  if (!iso) return '';
+  const diff = (Date.now() - new Date(iso).getTime()) / 1000;
+  if (diff < 60) return Math.floor(diff) + 's ago';
+  if (diff < 3600) return Math.floor(diff / 60) + 'm ago';
+  if (diff < 86400) return Math.floor(diff / 3600) + 'h ago';
+  return Math.floor(diff / 86400) + 'd ago';
+}
+
+function escapeHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+function escapeAttr(s) {
+  return escapeHtml(s).replace(/"/g, '&quot;');
+}
+
+// EVENTS
+$('login-form').addEventListener('submit', async (e) => {
+  e.preventDefault();
+  $('login-err').textContent = '';
+  $('login-btn').disabled = true;
+  const email = $('email').value.trim();
+  const password = $('password').value;
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+  $('login-btn').disabled = false;
+  if (error) {
+    $('login-err').textContent = error.message;
+    return;
+  }
+  await afterLogin(data.user);
+});
+
+$('logout').addEventListener('click', async () => {
+  await supabase.auth.signOut();
+  myProfile = null;
+  $('email').value = '';
+  $('password').value = '';
+  showLogin();
+});
+
+$('refresh').addEventListener('click', loadQueue);
+
+$('list').addEventListener('click', (e) => {
+  const btn = e.target.closest('button');
+  if (!btn) return;
+  const id = btn.dataset.id;
+  if (!id) return;
+  if (btn.classList.contains('approve')) {
+    moderate(id, 'approve');
+  } else if (btn.classList.contains('reject')) {
+    rejectTarget = { id, name: btn.dataset.name || '' };
+    $('reject-name').textContent = '"' + rejectTarget.name + '"';
+    $('reject-reason').value = '';
+    $('reject-backdrop').classList.add('open');
+    setTimeout(() => $('reject-reason').focus(), 50);
+  }
+});
+
+$('reject-cancel').addEventListener('click', () => {
+  $('reject-backdrop').classList.remove('open');
+  rejectTarget = null;
+});
+$('reject-confirm').addEventListener('click', async () => {
+  if (!rejectTarget) return;
+  const reason = $('reject-reason').value.trim() || 'Rejected by admin';
+  const id = rejectTarget.id;
+  $('reject-backdrop').classList.remove('open');
+  rejectTarget = null;
+  await moderate(id, 'reject', reason);
+});
+
+bootstrap();
+</script>
+</body>
+</html>
